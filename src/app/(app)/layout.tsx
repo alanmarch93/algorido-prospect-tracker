@@ -2,17 +2,23 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
+import { Profile } from "@/lib/types";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const { data: profile } = await supabase
+    .from("profiles").select("*").eq("id", user.id).single() as { data: Profile | null };
+
+  const isAdmin = profile?.is_admin ?? false;
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar — desktop only */}
       <div className="hidden md:block">
-        <Sidebar userEmail={user.email ?? ""} />
+        <Sidebar userEmail={user.email ?? ""} isAdmin={isAdmin} />
       </div>
 
       {/* Main content */}
@@ -27,6 +33,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <div className="text-xs" style={{ color: "#596494" }}>Prospect Tracker</div>
           </div>
           <div className="ml-auto flex items-center gap-2">
+            {isAdmin && (
+              <a href="/admin" className="text-xs px-2 py-1 rounded-full font-semibold"
+                style={{ background: "#ffa72620", color: "#ffa726" }}>Admin</a>
+            )}
             <div className="text-xs px-2 py-1 rounded-full font-semibold" style={{ background: "#22d68d20", color: "#22d68d" }}>● Live</div>
           </div>
         </div>

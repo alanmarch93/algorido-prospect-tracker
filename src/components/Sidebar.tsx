@@ -9,7 +9,7 @@ const nav = [
   { href: "/pipeline", label: "Pipeline", icon: "◎" },
 ];
 
-export default function Sidebar({ userEmail }: { userEmail: string }) {
+export default function Sidebar({ userEmail, isAdmin }: { userEmail: string; isAdmin: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -32,7 +32,7 @@ export default function Sidebar({ userEmail }: { userEmail: string }) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 space-y-1">
+      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
         {nav.map(item => {
           const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
           return (
@@ -49,6 +49,26 @@ export default function Sidebar({ userEmail }: { userEmail: string }) {
             </Link>
           );
         })}
+
+        {/* Admin link — only visible to admins */}
+        {isAdmin && (
+          <>
+            <div className="pt-3 pb-1 px-3">
+              <div className="text-xs font-semibold" style={{ color: "#596494" }}>ADMIN</div>
+            </div>
+            <Link href="/admin"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all"
+              style={{
+                background: pathname === "/admin" ? "#ffa72620" : "transparent",
+                color: pathname === "/admin" ? "#ffa726" : "#8d9ec7",
+                borderLeft: pathname === "/admin" ? "2px solid #ffa726" : "2px solid transparent",
+              }}
+            >
+              <span>◆</span>
+              <span>All Users</span>
+            </Link>
+          </>
+        )}
       </nav>
 
       {/* Bot status */}
@@ -68,7 +88,7 @@ export default function Sidebar({ userEmail }: { userEmail: string }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-xs font-semibold truncate" style={{ color: "#f2f4ff" }}>{userEmail}</div>
-          <div className="text-xs" style={{ color: "#596494" }}>Admin</div>
+          <div className="text-xs" style={{ color: isAdmin ? "#ffa726" : "#596494" }}>{isAdmin ? "Admin" : "Member"}</div>
         </div>
         <button onClick={signOut} title="Sign out" className="text-xs shrink-0 hover:opacity-80" style={{ color: "#596494" }}>⏻</button>
       </div>

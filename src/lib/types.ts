@@ -22,6 +22,13 @@ export interface Prospect {
   updated_at: string;
 }
 
+export interface Profile {
+  id: string;
+  email: string;
+  is_admin: boolean;
+  created_at: string;
+}
+
 export interface Activity {
   id: string;
   prospect_id: string;
