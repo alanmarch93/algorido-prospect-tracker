@@ -9,10 +9,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: profile } = await supabase
-    .from("profiles").select("*").eq("id", user.id).single() as { data: Profile | null };
-
-  const isAdmin = profile?.is_admin ?? false;
+  let isAdmin = false;
+  try {
+    const { data: profile } = await supabase
+      .from("profiles").select("is_admin").eq("id", user.id).single() as { data: Profile | null };
+    isAdmin = profile?.is_admin ?? false;
+  } catch {
+    isAdmin = false;
+  }
 
   return (
     <div className="flex min-h-screen">
