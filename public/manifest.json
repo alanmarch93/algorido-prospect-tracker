@@ -1,0 +1,13 @@
+{
+  "name": "Algorido AI — Prospect Tracker",
+  "short_name": "Algorido CRM",
+  "description": "Track prospect customers for Algorido AI Market Maker Volume Bot",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0f1a",
+  "theme_color": "#0d0f1a",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
