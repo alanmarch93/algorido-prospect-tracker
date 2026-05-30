@@ -81,8 +81,10 @@ export default async function ProspectsPage({
                 <div className="text-xs mt-0.5 mb-2" style={{ color: "#8d9ec7" }}>{p.company_name}</div>
                 <div className="flex items-center justify-between">
                   <div className="w-32"><ScoreBar score={p.score} /></div>
-                  <div className="text-xs font-semibold" style={{ color: "#596494" }}>
-                    {p.lead_source}
+                  <div className="text-xs font-semibold" style={{ color: p.stage === "Converted" && p.amount_invested != null ? "#22d68d" : "#596494" }}>
+                    {p.stage === "Converted" && p.amount_invested != null
+                      ? `$${Number(p.amount_invested).toLocaleString()} invested`
+                      : p.lead_source}
                   </div>
                 </div>
               </div>
@@ -96,7 +98,7 @@ export default async function ProspectsPage({
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: "1px solid #2d3757", background: "#1e2338" }}>
-              {["Prospect","Company","Stage","Score","Source","Actions"].map(h => (
+              {["Prospect","Company","Stage","Score","Invested","Actions"].map(h => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-semibold" style={{ color: "#596494" }}>{h}</th>
               ))}
             </tr>
@@ -126,7 +128,15 @@ export default async function ProspectsPage({
                 <td className="px-4 py-3"><StageBadge stage={p.stage} /></td>
                 <td className="px-4 py-3 w-32"><ScoreBar score={p.score} /></td>
                 <td className="px-4 py-3">
-                  <span className="text-xs" style={{ color: "#596494" }}>{p.lead_source}</span>
+                  {p.stage === "Converted" && p.amount_invested != null ? (
+                    <span className="font-semibold" style={{ color: "#22d68d" }}>
+                      ${Number(p.amount_invested).toLocaleString()}
+                    </span>
+                  ) : (
+                    <span className="text-xs" style={{ color: "#596494" }}>
+                      {p.stage === "Converted" ? "Not recorded" : "—"}
+                    </span>
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-3">

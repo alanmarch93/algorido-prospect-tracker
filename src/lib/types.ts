@@ -16,6 +16,7 @@ export interface Prospect {
   score: number;
   notes: string | null;
   account_value: number;
+  amount_invested: number | null;
   converted_at: string | null;
   created_at: string;
   updated_at: string;

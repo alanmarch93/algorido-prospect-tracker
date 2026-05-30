@@ -13,6 +13,9 @@ export default async function DashboardPage() {
   const qualified = prospects.filter(p => ["Interested","Demo Set","Converted"].includes(p.stage)).length;
   const active = prospects.filter(p => p.stage === "Converted").length;
   const pipeline = total * 100;
+  const totalInvested = prospects
+    .filter(p => p.stage === "Converted" && p.amount_invested != null)
+    .reduce((sum, p) => sum + Number(p.amount_invested), 0);
 
   const STAGES = ["Outreach","Contacted","Interested","Demo Set","Converted"];
   const stageCounts = STAGES.map(s => ({ stage: s, count: prospects.filter(p => p.stage === s).length }));
@@ -22,7 +25,7 @@ export default async function DashboardPage() {
     { label: "Total Prospects", value: String(total), sub: "tracked leads", color: "#3399ff" },
     { label: "Qualified", value: String(qualified), sub: `${total ? Math.round(qualified/total*100) : 0}% qualify`, color: "#22d68d" },
     { label: "Converted", value: String(active), sub: "active accounts", color: "#9966ff" },
-    { label: "Pipeline", value: String(pipeline > 0 ? total : 0), sub: "prospects in funnel", color: "#ffa726" },
+    { label: "Total Invested", value: totalInvested > 0 ? `$${totalInvested.toLocaleString()}` : "$0", sub: "in AI bots", color: "#22d68d" },
   ];
 
   return (

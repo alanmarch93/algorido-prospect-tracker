@@ -25,7 +25,6 @@ function Field({ label, required, children }: { label: string; required?: boolea
 
 export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
   const router = useRouter();
-  const supabase = createClient();
   const isEdit = !!prospect;
 
   const [form, setForm] = useState({
@@ -39,6 +38,7 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
     lead_source: prospect?.lead_source ?? "LinkedIn" as LeadSource,
     score: prospect?.score ?? 50,
     notes: prospect?.notes ?? "",
+    amount_invested: prospect?.amount_invested ?? "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -58,6 +58,8 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
 
     const payload = {
       ...form,
+      amount_invested: form.stage === "Converted" && form.amount_invested !== ""
+        ? Number(form.amount_invested) : null,
       user_id: user.id,
       converted_at: form.stage === "Converted" && (!prospect || prospect.stage !== "Converted")
         ? new Date().toISOString() : prospect?.converted_at ?? null,
@@ -66,11 +68,13 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
     if (isEdit) {
       const { error: err } = await supabase.from("prospects").update(payload).eq("id", prospect.id);
       if (err) { setError(err.message); setLoading(false); return; }
-      // Log stage change activity
       if (form.stage !== prospect.stage) {
         await supabase.from("activities").insert({
           prospect_id: prospect.id, user_id: user.id, type: "status_change",
-          title: `Stage changed to ${form.stage}`, body: `Previous stage: ${prospect.stage}`,
+          title: `Stage changed to ${form.stage}`,
+          body: form.stage === "Converted" && form.amount_invested
+            ? `Previous stage: ${prospect.stage}. Amount invested: $${Number(form.amount_invested).toLocaleString()}`
+            : `Previous stage: ${prospect.stage}`,
         });
       }
       router.push(`/prospects/${prospect.id}`);
@@ -93,6 +97,8 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
     router.push("/prospects");
     router.refresh();
   }
+
+  const isConverted = form.stage === "Converted";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -145,6 +151,7 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
             </select>
           </Field>
         </div>
+
         <Field label={`Prospect Score: ${form.score}/100`}>
           <input type="range" min={0} max={100} value={form.score} onChange={e => set("score", Number(e.target.value))}
             className="w-full accent-blue-400" />
@@ -153,9 +160,37 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
           </div>
         </Field>
 
-        {/* Value box */}
+        {/* Amount Invested — shown only when Converted */}
+        {isConverted && (
+          <div className="mt-4 p-4 rounded-xl" style={{ background: "#22d68d10", border: "1px solid #22d68d40" }}>
+            <div className="flex items-center gap-2 mb-3">
+              <span style={{ color: "#22d68d" }}>✓</span>
+              <span className="text-sm font-semibold" style={{ color: "#22d68d" }}>Prospect Converted!</span>
+            </div>
+            <Field label="Amount Invested in AI Bot (USD)" required>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold" style={{ color: "#8d9ec7" }}>$</span>
+                <input
+                  style={{ ...inputStyle, paddingLeft: 24 }}
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  required={isConverted}
+                  value={form.amount_invested}
+                  onChange={e => set("amount_invested", e.target.value)}
+                  placeholder="e.g. 500"
+                />
+              </div>
+              <p className="text-xs mt-1.5" style={{ color: "#596494" }}>
+                Total USD amount this prospect has invested in the Algorido AI Market Maker Bot
+              </p>
+            </Field>
+          </div>
+        )}
+
+        {/* Algorido info */}
         <div className="mt-4 px-4 py-3 rounded-lg flex items-center gap-3" style={{ background: "#3399ff15", border: "1px solid #3399ff30" }}>
-          <span style={{ color: "#3399ff" }}>💰</span>
+          <span style={{ color: "#3399ff" }}>⬡</span>
           <div>
             <div className="text-sm font-semibold" style={{ color: "#3399ff" }}>Algorido AI — Market Maker Volume Bot</div>
             <div className="text-xs" style={{ color: "#8d9ec7" }}>From digital slavery to digital mastery · dash.algorido.com</div>

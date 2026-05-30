@@ -67,7 +67,8 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
                 ["Bot Plan", "Market Maker Volume Bot"],
                 ["Added", new Date(prospect.created_at).toLocaleDateString()],
                 ["Last Updated", new Date(prospect.updated_at).toLocaleDateString()],
-                ["Converted", prospect.converted_at ? new Date(prospect.converted_at).toLocaleDateString() : "—"],
+                ["Converted On", prospect.converted_at ? new Date(prospect.converted_at).toLocaleDateString() : "—"],
+                ["Amount Invested", prospect.amount_invested != null ? `$${Number(prospect.amount_invested).toLocaleString()}` : "—"],
               ].map(([label, val]) => (
                 <div key={label}>
                   <div className="text-xs mb-0.5" style={{ color: "#596494" }}>{label}</div>
@@ -161,6 +162,26 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
               </a>
             </div>
           </div>
+
+          {/* Amount Invested — shown only for converted prospects */}
+          {prospect.stage === "Converted" && (
+            <div className="rounded-xl p-5" style={{ background: "#22d68d10", border: "1px solid #22d68d40" }}>
+              <div className="text-xs font-semibold mb-1" style={{ color: "#22d68d" }}>AMOUNT INVESTED IN AI BOT</div>
+              {prospect.amount_invested != null ? (
+                <>
+                  <div className="text-3xl font-extrabold" style={{ color: "#f2f4ff" }}>
+                    ${Number(prospect.amount_invested).toLocaleString()}
+                  </div>
+                  <div className="text-xs mt-1" style={{ color: "#8d9ec7" }}>USD · Market Maker Volume Bot</div>
+                </>
+              ) : (
+                <div className="text-sm" style={{ color: "#8d9ec7" }}>
+                  Not recorded yet.{" "}
+                  <a href={`/prospects/${prospect.id}/edit`} style={{ color: "#22d68d" }}>Add amount →</a>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Algorido link */}
           <div className="rounded-xl p-5" style={{ background: "#3399ff15", border: "1px solid #3399ff30" }}>

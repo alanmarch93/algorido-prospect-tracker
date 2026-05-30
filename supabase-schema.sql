@@ -17,6 +17,7 @@ create table if not exists prospects (
   score integer default 50 check (score >= 0 and score <= 100),
   notes text,
   account_value integer default 100,
+  amount_invested numeric(12,2) default null,
   converted_at timestamptz,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
