@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import { Prospect, Profile } from "@/lib/types";
 import StageBadge from "@/components/StageBadge";
@@ -11,7 +12,7 @@ export default async function AdminPage() {
 
   // Check if admin
   const { data: profile } = await supabase
-    .from("profiles").select("*").eq("id", user.id).single() as { data: Profile };
+    .from("profiles").select("*").eq("id", user.id).single() as { data: Profile | null };
 
   if (!profile?.is_admin) {
     return (
@@ -26,12 +27,16 @@ export default async function AdminPage() {
     );
   }
 
-  // Fetch ALL prospects from all users
-  const { data: allProspects = [] } = await supabase
+  // Use service role to bypass RLS and fetch ALL data
+  const service = createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  const { data: allProspects = [] } = await service
     .from("prospects").select("*").order("created_at", { ascending: false }) as { data: Prospect[] };
 
-  // Fetch all profiles
-  const { data: profiles = [] } = await supabase
+  const { data: profiles = [] } = await service
     .from("profiles").select("*") as { data: Profile[] };
 
   // Group prospects by user
@@ -63,10 +68,10 @@ export default async function AdminPage() {
       {/* Global KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
         {[
-          { label: "Total Users", value: String(totalUsers), sub: "active trackers", color: "#3399ff" },
-          { label: "All Prospects", value: String(totalProspects), sub: "across all users", color: "#9966ff" },
-          { label: "Total Converted", value: String(totalConverted), sub: `${totalProspects ? Math.round(totalConverted/totalProspects*100) : 0}% rate`, color: "#22d68d" },
-          { label: "Total Invested", value: totalInvested > 0 ? `$${totalInvested.toLocaleString()}` : "$0", sub: "in AI bots", color: "#ffa726" },
+          { label: "Total Users",     value: String(totalUsers),    sub: "active trackers",  color: "#3399ff" },
+          { label: "All Prospects",   value: String(totalProspects),sub: "across all users", color: "#9966ff" },
+          { label: "Total Converted", value: String(totalConverted),sub: `${totalProspects ? Math.round(totalConverted/totalProspects*100) : 0}% rate`, color: "#22d68d" },
+          { label: "Total Invested",  value: totalInvested > 0 ? `$${totalInvested.toLocaleString()}` : "$0", sub: "in AI bots", color: "#ffa726" },
         ].map((k, i) => (
           <div key={i} className="rounded-xl p-4 relative overflow-hidden" style={{ background: "#161927", border: "1px solid #2d3757" }}>
             <div className="text-xs font-medium mb-2" style={{ color: "#8d9ec7" }}>{k.label}</div>
@@ -79,6 +84,11 @@ export default async function AdminPage() {
 
       {/* Per-user breakdown */}
       <div className="space-y-4">
+        {byUser.length === 0 && (
+          <div className="text-center py-12 rounded-xl text-sm" style={{ background: "#161927", border: "1px solid #2d3757", color: "#596494" }}>
+            No prospects from any user yet.
+          </div>
+        )}
         {byUser.map(({ profile: p, prospects }) => {
           const converted = prospects.filter(pr => pr.stage === "Converted").length;
           const invested = prospects
@@ -96,11 +106,8 @@ export default async function AdminPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-sm" style={{ color: "#f2f4ff" }}>{p.email}</div>
-                  <div className="text-xs" style={{ color: "#596494" }}>
-                    {prospects.length} prospect{prospects.length !== 1 ? "s" : ""}
-                  </div>
+                  <div className="text-xs" style={{ color: "#596494" }}>{prospects.length} prospect{prospects.length !== 1 ? "s" : ""}</div>
                 </div>
-                {/* User stats */}
                 <div className="flex gap-4 text-xs">
                   <div className="text-center">
                     <div className="font-bold" style={{ color: "#22d68d" }}>{converted}</div>
@@ -146,12 +153,6 @@ export default async function AdminPage() {
             </div>
           );
         })}
-
-        {byUser.length === 0 && (
-          <div className="text-center py-12 rounded-xl text-sm" style={{ background: "#161927", border: "1px solid #2d3757", color: "#596494" }}>
-            No prospects from any user yet.
-          </div>
-        )}
       </div>
     </div>
   );
