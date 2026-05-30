@@ -27,10 +27,32 @@ export default async function AdminPage() {
     );
   }
 
+  // Service role key required to bypass RLS
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return (
+      <div className="flex items-center justify-center min-h-screen p-8">
+        <div className="rounded-xl p-8 max-w-md w-full text-center" style={{ background: "#161927", border: "1px solid #ffa72640" }}>
+          <div className="text-3xl mb-4">⚙️</div>
+          <div className="text-lg font-semibold mb-2" style={{ color: "#f2f4ff" }}>Setup Required</div>
+          <div className="text-sm mb-4" style={{ color: "#8d9ec7" }}>
+            Add <code className="px-1.5 py-0.5 rounded text-xs" style={{ background: "#1e2338", color: "#ffa726" }}>SUPABASE_SERVICE_ROLE_KEY</code> to your Vercel environment variables to enable the admin view.
+          </div>
+          <div className="text-xs text-left rounded-lg p-4 space-y-2" style={{ background: "#1e2338", color: "#8d9ec7" }}>
+            <div>1. Go to <span style={{ color: "#3399ff" }}>supabase.com</span> → Settings → API</div>
+            <div>2. Copy the <span style={{ color: "#ffa726" }}>service_role</span> secret key</div>
+            <div>3. Go to <span style={{ color: "#3399ff" }}>vercel.com</span> → your project → Settings → Environment Variables</div>
+            <div>4. Add <span style={{ color: "#ffa726" }}>SUPABASE_SERVICE_ROLE_KEY</span> and paste the key</div>
+            <div>5. Redeploy the project</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Use service role to bypass RLS and fetch ALL data
   const service = createServiceClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    process.env.SUPABASE_SERVICE_ROLE_KEY
   );
 
   const { data: allProspects = [] } = await service
