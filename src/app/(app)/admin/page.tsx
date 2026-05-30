@@ -6,6 +6,7 @@ import StageBadge from "@/components/StageBadge";
 import Link from "next/link";
 
 export default async function AdminPage() {
+  try {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
@@ -178,4 +179,15 @@ export default async function AdminPage() {
       </div>
     </div>
   );
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return (
+      <div className="p-8">
+        <div className="rounded-xl p-6" style={{ background: "#ff595915", border: "1px solid #ff595940" }}>
+          <div className="font-semibold mb-2" style={{ color: "#ff5959" }}>Server Error (debug)</div>
+          <pre className="text-xs whitespace-pre-wrap" style={{ color: "#8d9ec7" }}>{msg}</pre>
+        </div>
+      </div>
+    );
+  }
 }
