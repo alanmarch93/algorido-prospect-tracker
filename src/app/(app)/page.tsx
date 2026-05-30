@@ -21,8 +21,8 @@ export default async function DashboardPage() {
   const kpis = [
     { label: "Total Prospects", value: String(total), sub: "tracked leads", color: "#3399ff" },
     { label: "Qualified", value: String(qualified), sub: `${total ? Math.round(qualified/total*100) : 0}% qualify`, color: "#22d68d" },
-    { label: "Converted", value: String(active), sub: `$${active * 100} MRR`, color: "#9966ff" },
-    { label: "Pipeline", value: `$${pipeline.toLocaleString()}`, sub: `${total} × $100`, color: "#ffa726" },
+    { label: "Converted", value: String(active), sub: "active accounts", color: "#9966ff" },
+    { label: "Pipeline", value: String(pipeline > 0 ? total : 0), sub: "prospects in funnel", color: "#ffa726" },
   ];
 
   return (
@@ -79,8 +79,8 @@ export default async function DashboardPage() {
         <div className="h-px my-4" style={{ background: "#2d3757" }} />
         <div className="grid grid-cols-3 gap-3">
           {[
-            { label: "Account Value", val: "$100/mo", color: "#22d68d" },
-            { label: "Total MRR", val: `$${active * 100}`, color: "#3399ff" },
+            { label: "Qualified", val: String(qualified), color: "#22d68d" },
+            { label: "In Progress", val: String(prospects.filter(p => ["Contacted","Interested","Demo Set"].includes(p.stage)).length), color: "#3399ff" },
             { label: "Lost", val: String(prospects.filter(p => p.stage === "Lost").length), color: "#ff5959" },
           ].map(stat => (
             <div key={stat.label}>

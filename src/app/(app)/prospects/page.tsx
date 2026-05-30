@@ -30,7 +30,7 @@ export default async function ProspectsPage({
       <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-xl md:text-2xl font-bold" style={{ color: "#f2f4ff" }}>Prospects</h1>
-          <p className="text-xs md:text-sm mt-1" style={{ color: "#8d9ec7" }}>Market Maker Volume Bot · $100/account</p>
+          <p className="text-xs md:text-sm mt-1" style={{ color: "#8d9ec7" }}>Market Maker Volume Bot · Algorido AI</p>
         </div>
         <Link href="/prospects/new"
           className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold hover:opacity-90 md:px-4 md:py-2.5"
@@ -81,8 +81,8 @@ export default async function ProspectsPage({
                 <div className="text-xs mt-0.5 mb-2" style={{ color: "#8d9ec7" }}>{p.company_name}</div>
                 <div className="flex items-center justify-between">
                   <div className="w-32"><ScoreBar score={p.score} /></div>
-                  <div className="text-xs font-semibold" style={{ color: p.stage === "Converted" ? "#22d68d" : "#596494" }}>
-                    {p.stage === "Converted" ? "$100/mo" : p.lead_source}
+                  <div className="text-xs font-semibold" style={{ color: "#596494" }}>
+                    {p.lead_source}
                   </div>
                 </div>
               </div>
@@ -96,7 +96,7 @@ export default async function ProspectsPage({
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: "1px solid #2d3757", background: "#1e2338" }}>
-              {["Prospect","Company","Stage","Score","Value","Actions"].map(h => (
+              {["Prospect","Company","Stage","Score","Source","Actions"].map(h => (
                 <th key={h} className="text-left px-4 py-3 text-xs font-semibold" style={{ color: "#596494" }}>{h}</th>
               ))}
             </tr>
@@ -126,9 +126,7 @@ export default async function ProspectsPage({
                 <td className="px-4 py-3"><StageBadge stage={p.stage} /></td>
                 <td className="px-4 py-3 w-32"><ScoreBar score={p.score} /></td>
                 <td className="px-4 py-3">
-                  <span className="font-semibold" style={{ color: p.stage === "Converted" ? "#22d68d" : "#596494" }}>
-                    {p.stage === "Converted" ? "$100" : "—"}
-                  </span>
+                  <span className="text-xs" style={{ color: "#596494" }}>{p.lead_source}</span>
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex gap-3">

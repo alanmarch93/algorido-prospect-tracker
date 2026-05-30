@@ -64,7 +64,6 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
             <div className="grid grid-cols-2 gap-4 text-sm">
               {[
                 ["Lead Source", prospect.lead_source],
-                ["Account Value", "$100 / month"],
                 ["Bot Plan", "Market Maker Volume Bot"],
                 ["Added", new Date(prospect.created_at).toLocaleDateString()],
                 ["Last Updated", new Date(prospect.updated_at).toLocaleDateString()],
@@ -163,11 +162,15 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
             </div>
           </div>
 
-          {/* Account value */}
+          {/* Algorido link */}
           <div className="rounded-xl p-5" style={{ background: "#3399ff15", border: "1px solid #3399ff30" }}>
-            <div className="text-xs font-semibold mb-1" style={{ color: "#3399ff" }}>ACCOUNT VALUE</div>
-            <div className="text-3xl font-extrabold" style={{ color: "#f2f4ff" }}>$100</div>
-            <div className="text-xs mt-1" style={{ color: "#8d9ec7" }}>per month · Market Maker Volume Bot</div>
+            <div className="text-xs font-semibold mb-1" style={{ color: "#3399ff" }}>PLATFORM</div>
+            <div className="text-sm font-bold mb-1" style={{ color: "#f2f4ff" }}>Algorido AI</div>
+            <div className="text-xs mb-3" style={{ color: "#8d9ec7" }}>Market Maker Volume Bot</div>
+            <a href="https://dash.algorido.com" target="_blank" rel="noreferrer"
+              className="text-xs font-semibold" style={{ color: "#3399ff" }}>
+              Open Dashboard ↗
+            </a>
           </div>
         </div>
       </div>

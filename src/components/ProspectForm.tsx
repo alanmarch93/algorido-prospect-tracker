@@ -157,8 +157,8 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
         <div className="mt-4 px-4 py-3 rounded-lg flex items-center gap-3" style={{ background: "#3399ff15", border: "1px solid #3399ff30" }}>
           <span style={{ color: "#3399ff" }}>💰</span>
           <div>
-            <div className="text-sm font-semibold" style={{ color: "#3399ff" }}>Account Value: $100 USD / month</div>
-            <div className="text-xs" style={{ color: "#8d9ec7" }}>Each converted prospect generates $100/month on dash.algorido.com</div>
+            <div className="text-sm font-semibold" style={{ color: "#3399ff" }}>Algorido AI — Market Maker Volume Bot</div>
+            <div className="text-xs" style={{ color: "#8d9ec7" }}>From digital slavery to digital mastery · dash.algorido.com</div>
           </div>
         </div>
       </div>

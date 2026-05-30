@@ -31,7 +31,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style={{ background: "#3399ff20", color: "#3399ff" }}>⬡</div>
             <span className="text-2xl font-bold" style={{ color: "#f2f4ff" }}>Algorido AI</span>
           </div>
-          <p className="text-sm" style={{ color: "#8d9ec7" }}>Prospect Tracker — Market Maker Volume Bot</p>
+          <p className="text-sm italic" style={{ color: "#3399ff" }}>From digital slavery to digital mastery</p>
         </div>
 
         {/* Card */}
@@ -89,7 +89,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-xs mt-6" style={{ color: "#596494" }}>
-          $100 USD / account · Market Maker Volume Bot
+          Algorido AI · Market Maker Volume Bot
         </p>
       </div>
     </div>

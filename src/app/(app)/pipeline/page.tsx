@@ -54,7 +54,7 @@ export default async function PipelinePage() {
                   </span>
                 </div>
                 {stage === "Converted" && (
-                  <div className="text-xs" style={{ color: "#22d68d" }}>${value}/mo MRR</div>
+                  <div className="text-xs" style={{ color: "#22d68d" }}>{list.length} active account{list.length !== 1 ? "s" : ""}</div>
                 )}
               </div>
 
