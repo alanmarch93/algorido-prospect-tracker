@@ -26,7 +26,39 @@ export async function GET() {
       service.from("profiles").select("*"),
     ]);
 
-    return NextResponse.json({ prospects: prospects ?? [], profiles: profiles ?? [] });
+    // Find users who have prospects but no profile row
+    const allProspects = prospects ?? [];
+    const allProfiles = profiles ?? [];
+    const profileIds = new Set(allProfiles.map((p: { id: string }) => p.id));
+    const missingUserIds = [...new Set(
+      allProspects
+        .map((p: { user_id: string }) => p.user_id)
+        .filter((id: string) => !profileIds.has(id))
+    )];
+
+    // Fetch missing users from auth.users using service role
+    const missingProfiles = [];
+    for (const userId of missingUserIds) {
+      const { data: authUser } = await service.auth.admin.getUserById(userId);
+      if (authUser?.user) {
+        missingProfiles.push({
+          id: authUser.user.id,
+          email: authUser.user.email ?? "unknown",
+          is_admin: false,
+        });
+        // Also insert into profiles so future loads work
+        await service.from("profiles").upsert({
+          id: authUser.user.id,
+          email: authUser.user.email ?? "unknown",
+          is_admin: false,
+        }, { onConflict: "id" });
+      }
+    }
+
+    return NextResponse.json({
+      prospects: allProspects,
+      profiles: [...allProfiles, ...missingProfiles],
+    });
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
