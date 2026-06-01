@@ -3,6 +3,7 @@ import { Prospect, Stage } from "@/lib/types";
 import Link from "next/link";
 import StageBadge from "@/components/StageBadge";
 import ScoreBar from "@/components/ScoreBar";
+import ExportButton from "@/components/ExportButton";
 
 const STAGES: Stage[] = ["Outreach","Contacted","Interested","Demo Set","Converted","Lost"];
 
@@ -32,11 +33,14 @@ export default async function ProspectsPage({
           <h1 className="text-xl md:text-2xl font-bold" style={{ color: "#f2f4ff" }}>Prospects</h1>
           <p className="text-xs md:text-sm mt-1" style={{ color: "#8d9ec7" }}>Market Maker Volume Bot · Algorido AI</p>
         </div>
-        <Link href="/prospects/new"
-          className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold hover:opacity-90 md:px-4 md:py-2.5"
-          style={{ background: "#3399ff", color: "#0d0f1a" }}>
-          + Add
-        </Link>
+        <div className="flex items-center gap-2">
+          <ExportButton />
+          <Link href="/prospects/new"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold hover:opacity-90 md:px-4 md:py-2.5"
+            style={{ background: "#3399ff", color: "#0d0f1a" }}>
+            + Add
+          </Link>
+        </div>
       </div>
 
       {/* Stage tabs — horizontal scroll on mobile */}

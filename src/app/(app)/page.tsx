@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { Prospect } from "@/lib/types";
 import Link from "next/link";
+import ExportButton from "@/components/ExportButton";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -31,9 +32,12 @@ export default async function DashboardPage() {
   return (
     <div className="p-4 md:p-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold" style={{ color: "#f2f4ff" }}>Dashboard</h1>
-        <p className="text-xs md:text-sm mt-1" style={{ color: "#8d9ec7" }}>Algorido AI prospect pipeline overview</p>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold" style={{ color: "#f2f4ff" }}>Dashboard</h1>
+          <p className="text-xs md:text-sm mt-1" style={{ color: "#8d9ec7" }}>Algorido AI prospect pipeline overview</p>
+        </div>
+        <ExportButton />
       </div>
 
       {/* KPI Cards — 2 cols on mobile, 4 on desktop */}
