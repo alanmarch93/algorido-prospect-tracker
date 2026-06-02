@@ -15,6 +15,8 @@ export interface Prospect {
   lead_source: LeadSource;
   score: number;
   notes: string | null;
+  referral_id: string | null;
+  closed_by: string | null;
   account_value: number;
   amount_invested: number | null;
   converted_at: string | null;

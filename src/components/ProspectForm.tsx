@@ -38,6 +38,8 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
     lead_source: prospect?.lead_source ?? "LinkedIn" as LeadSource,
     score: prospect?.score ?? 50,
     notes: prospect?.notes ?? "",
+    referral_id: prospect?.referral_id ?? "",
+    closed_by: prospect?.closed_by ?? "",
     amount_invested: prospect?.amount_invested ?? "",
   });
 
@@ -195,6 +197,21 @@ export default function ProspectForm({ prospect }: { prospect?: Prospect }) {
             <div className="text-sm font-semibold" style={{ color: "#3399ff" }}>Algorido AI — Market Maker Volume Bot</div>
             <div className="text-xs" style={{ color: "#8d9ec7" }}>From digital slavery to digital mastery · dash.algorido.com</div>
           </div>
+        </div>
+      </div>
+
+      {/* Referral & Closed By */}
+      <div className="rounded-xl p-6" style={{ background: "#161927", border: "1px solid #2d3757" }}>
+        <div className="text-xs font-semibold mb-4" style={{ color: "#596494" }}>REFERRAL & CLOSING</div>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Referral ID">
+            <input style={inputStyle} value={form.referral_id} onChange={e => set("referral_id", e.target.value)}
+              placeholder="e.g. REF-001" />
+          </Field>
+          <Field label="Closed By">
+            <input style={inputStyle} value={form.closed_by} onChange={e => set("closed_by", e.target.value)}
+              placeholder="e.g. Alan March" />
+          </Field>
         </div>
       </div>
 

@@ -64,6 +64,8 @@ export default async function ProspectDetailPage({ params }: { params: Promise<{
             <div className="grid grid-cols-2 gap-4 text-sm">
               {[
                 ["Lead Source", prospect.lead_source],
+                ["Referral ID", prospect.referral_id ?? "—"],
+                ["Closed By", prospect.closed_by ?? "—"],
                 ["Bot Plan", "Market Maker Volume Bot"],
                 ["Added", new Date(prospect.created_at).toLocaleDateString()],
                 ["Last Updated", new Date(prospect.updated_at).toLocaleDateString()],
