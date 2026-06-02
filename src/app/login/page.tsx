@@ -29,7 +29,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold" style={{ background: "#3399ff20", color: "#3399ff" }}>⬡</div>
-            <span className="text-2xl font-bold" style={{ color: "#f2f4ff" }}>Algorido AI</span>
+            <span className="text-2xl font-bold" style={{ color: "#f2f4ff" }}>Algorido AI Prospect Tracker</span>
           </div>
           <p className="text-sm italic" style={{ color: "#3399ff" }}>From digital slavery to digital mastery</p>
         </div>
